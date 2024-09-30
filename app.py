@@ -37,22 +37,17 @@ def query_db(query, args=(), one=False):
     """
     Pega a conexão com o bd, executa a query e fecha a conexão depois
 
-    Recebe a query e seus argumentos como parametro, o "one" se for true 
-    ele retorna apenas um item, caso false ele retorna uma lista se houver
-
-    - cur = get_db_connection().execute(query, args):
+     cur = get_db_connection().execute(query, args):
         Pega a conexão
 
-    - rv = cur.fetchall():
+    rv = cur.fetchall():
         Pega todos os itens do resultado
     
-    - cur.close():
+    cur.close():
         Fecha a conexão
-
-    - return (rv[0] if rv else None) if one else rv:
+        
         Logica por tras do parametro "one" se for true ele retorna apenas o 
-        primeiro item da lista, se false ele retorna todos
-
+        primeiro item da lista, se false ele retorna todos!
     """
     conn = get_db_connection()
     cur = conn.cursor()
@@ -105,11 +100,7 @@ def get_usuarios(): # Alterado de getUsuarios para get_usuarios
 
     - usuarios_json = [{"id":id,"nome":nome,"nascimento":nascimento}
     for id, nome, nascimento in resultset]:
-        Cria uma lista de jsons com todos os itens retornados pelo query_db
-    
-    - loads(dumps(usuarios_json)):
-        dumps serializa em um string json e o loads desserializa, não é 
-        necessario fazer isso pois o json_usuarios já retorna uma lista de jsons
+        Cria uma lista de jsons com todos os itens retornados
     """
     resultset = query_db('SELECT * FROM tb_usuario WHERE deleted_at is null ')
     usuarios_json = [{"id":id,"nome":nome,"nascimento":nascimento,
@@ -121,8 +112,6 @@ def set_usuario(data): #Alterado de setUsuario para set_usuario
     """
     Função utilizada para fazer um post de um novo usuario
 
-    - linhas_modificadas = query_db_with_commit('INSERT INTO tb_usuario(nome, nascimento)
-    values (?, ?)', (data.get('nome'), data.get('nascimento'))):
         Usa a função query_db_with_commit, pois nesse caso é necessario um commit
         Ela retorna o número de linhas modificadas com a query
     """
@@ -133,8 +122,7 @@ def set_usuario(data): #Alterado de setUsuario para set_usuario
 @app.route("/usuarios", methods=['GET', 'POST'])
 def usuarios():
     """
-    Função que chama as funções get_usuarios ou set_usuario,
-    dependendo de qual metodo for utilizado
+    Função que chama as funções get_usuarios ou set_usuario
 
     """
     if request.method == 'GET':
@@ -150,10 +138,6 @@ def usuarios():
 def get_usuario_by_id(user_id): #Alterado de getUsuarioById para get_usuario_by_id
     """
     Função que pega um unico usuario, apartir do id
-
-    - resultado = query_db('SELECT * FROM tb_usuario WHERE id = ?', (user_id,), True):
-        Passo o select e o argumento id, o 'True' é para a função retornar apenas um 
-        elemento, equivalente ao fetchone()
     """
     resultado = query_db('SELECT * FROM tb_usuario WHERE id = %s', (user_id,), True)
     if resultado is not None:
