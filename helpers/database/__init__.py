@@ -9,16 +9,12 @@ def get_db_connection():
     """
     gera um conexão com banco de dados, armazenando informações no contexto da aplicação
 
-    - conn = getattr(g, '_database', None)
-        Pega o '_database' do 'g', se n'ao tiver ele retorna none e conecta depois 
-        (Fica no contexto)
+    - conn = getattr(g, database, None)
+        Pega o database do g, se n ao tiver ele retorna none e conecta depois 
         
     - conn = g._database = sqlite3.connect(DATABASE_NAME)
-        Coloca no "_database" database do contexto a conexão com o sqlite3 e coloca a conexão em 
+        Coloca database do contexto a conexão com o sqlite3 e coloca a conexão em 
         contexto dentro do conn
-
-    -conn.row_factory = sqlite3.Row
-        O resultado da query vem em um objeto do sqlite3 que se comporta como dicionario
     
     """
     from app import app
